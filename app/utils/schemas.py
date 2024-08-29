@@ -7,8 +7,8 @@ from typing import Optional
 
 ### User
 class UserRole(str, Enum):
-    ROLE_ADMIN = config("role_admin")
-    ROLE_END_USER = config("role_end_user")
+    ROLE_ADMIN = config("ROLE_ADMIN")
+    ROLE_END_USER = config("ROLE_END_USER")
     
 
 class UserCreate(BaseModel):

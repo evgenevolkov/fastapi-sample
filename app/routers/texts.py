@@ -13,8 +13,8 @@ from ..utils.logger import get_logger
 logger = get_logger(__name__)
 router = APIRouter(prefix='/texts', tags = ['Texts'])
 
-ROLE_ADMIN = config("role_admin")
-ROLE_END_USER = config("role_end_user")
+ROLE_ADMIN = config("ROLE_ADMIN")
+ROLE_END_USER = config("ROLE_END_USER")
 
 
 @router.post('/create', status_code=status.HTTP_201_CREATED

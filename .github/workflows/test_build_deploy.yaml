@@ -1,0 +1,79 @@
+name: Test, Build and Deploy 
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: testing
+    env:
+      # DB
+      POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+      POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+      POSTGRES_DATABASE: ${{vars.POSTGRES_DATABASE}}
+      POSTGRES_HOST: ${{vars.POSTGRES_HOST}}
+      POSTGRES_PORT: ${{vars.POSTGRES_PORT}}
+    
+      # Oauth
+      SECRET_KEY: ${{secrets.SECRET_KEY}}
+      ALGORITHM: ${{vars.ALGORITHM}}
+      TOKEN_EXPIRE_MINUTES: ${{vars.TOKEN_EXPIRE_MINUTES}}
+    
+      # Logging
+      LOGGING_LEVEL: ${{vars.LOGGING_LEVEL}}
+    
+      # User role namings
+      ROLE_ADMIN: ${{vars.ROLE_ADMIN}}
+      ROLE_END_USER: ${{vars.ROLE_END_USER}}
+
+    # strategy:
+    #   matrix:
+    #     python-version: ['3.11']
+  
+    services: 
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+          POSTGRES_DB: ${{vars.POSTGRES_DATABASE}}
+          POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+          POSTGRES_HOST: ${{vars.POSTGRES_HOST}}
+        ports: 
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      
+    steps:
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          until pg_isready -h localhost -p 5432; do
+            echo "Waiting for PostgreSQL to be ready...";
+            sleep 5;
+          done
+
+      - name: pull git repo
+        uses: actions/checkout@v4
+
+      - name: install python version 3.11
+      # {{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          # {{ matrix.python-version }}
+          # cache: 'pip'
+
+      - name: update pip
+        run: python -m pip install --upgrade pip
+
+      - name: install dependencies via pip
+        run: pip install -r requirements.txt
+
+      - name: run tests via pytest
+        run: |
+          pip install pytest
+          python -m pytest

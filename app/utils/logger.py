@@ -2,7 +2,7 @@ from decouple import config
 import logging
 
 
-logging_level = config('logging_level')
+logging_level = config('LOGGING_LEVEL')
 
 
 def get_logger(name):

@@ -24,11 +24,22 @@ while True:  # infinitely try to connect to database unless succeeded
         conn = psycopg2.connect(f"""
             host=localhost
             port=5432
-            dbname={config('postgres_database')}
-            user={config('postgres_user')}
-            password={config('postgres_password')}
+            dbname={config('POSTGRES_DATABASE')}
+            user={config('POSTGRES_USER')}
+            password={config('POSTGRES_PASSWORD')}
             """
             )
+        
+        # conn = psycopg2.connect(f"""
+        #     host=localhost
+        #     port=5432
+        #     dbname=fastapi_sample_test
+        #     user=postgres
+        #     password=password123
+        #     """
+        #     )
+
+
         logger.debug('Succesfully connected to DB')
         break
     except Exception as error:
