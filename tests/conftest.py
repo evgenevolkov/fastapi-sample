@@ -102,7 +102,8 @@ def get_token(user_id):
                     data={"user_id": user_id},
                     secret_key=config('SECRET_KEY'),
                     algorithm=config('ALGORITHM'),
-                    token_expire_minutes=240) #mins
+                    token_expire_minutes=config('TOKEN_EXPIRE_MINUTES')
+    )
     return auth_data['token']
 
 
