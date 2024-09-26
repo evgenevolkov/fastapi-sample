@@ -22,14 +22,14 @@ while True:  # infinitely try to connect to database unless succeeded
     logger.debug('Attempting to connect to the DB')
     try:
         conn = psycopg2.connect(f"""
-            host=localhost
-            port=5432
+            host={config('POSTGRES_HOST')}
+            port={config('POSTGRES_PORT')}
             dbname={config('POSTGRES_DATABASE')}
             user={config('POSTGRES_USER')}
             password={config('POSTGRES_PASSWORD')}
             """
             )
-        
+      
         logger.debug('Succesfully connected to DB')
         break
     except Exception as error:
